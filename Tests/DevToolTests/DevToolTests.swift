@@ -1,12 +1,19 @@
+@testable import DevToolCore
 import XCTest
-@testable import DevTool
 
 final class DevToolTests: XCTestCase {
-    func testExample() throws {
-        // XCTest Documentation
-        // https://developer.apple.com/documentation/xctest
+    func testIfEmpty() throws {
+        XCTAssertEqual([].ifEmpty(others: [1, 2, 3]), [1, 2, 3])
+        XCTAssertEqual([1].ifEmpty(others: [1, 2, 3]), [1])
+    }
 
-        // Defining Test Cases and Test Methods
-        // https://developer.apple.com/documentation/xctest/defining_test_cases_and_test_methods
+    func testRemoveDuplicates() throws {
+        let a = [1, 1, 2, 3, 3, 4, 5, 5]
+        let b = a
+        let c = b.removeDuplicates()
+
+        XCTAssertEqual(a, b)
+        XCTAssertNotEqual(b, [1, 2, 3, 4, 5])
+        XCTAssertEqual(c, [1, 2, 3, 4, 5])
     }
 }

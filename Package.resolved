@@ -1,0 +1,15 @@
+{
+  "originHash" : "17ad3a96320db8d6ed2e450b5a907e30a715ef92a981dcf86cffe15fd071334d",
+  "pins" : [
+    {
+      "identity" : "handyjson",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/alibaba/HandyJSON.git",
+      "state" : {
+        "revision" : "dcf39cf062680ffa4fd0acb7f9117a97755c113f",
+        "version" : "5.0.2"
+      }
+    }
+  ],
+  "version" : 3
+}
