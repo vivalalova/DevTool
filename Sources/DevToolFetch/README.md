@@ -28,7 +28,7 @@ final class JsonPlaceholderAPI: Fetch {
 }
 
 extension JsonPlaceholderAPI {
-    struct Todo: Codable {
+    struct Todo: HandyJSON {
         var id: Int?
         var userId: Int?
         var title: String?
