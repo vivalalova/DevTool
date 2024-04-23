@@ -6,6 +6,7 @@
 
 import Foundation
 
+public
 extension String {
     var urlEncoded: String {
         self.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) ?? ""

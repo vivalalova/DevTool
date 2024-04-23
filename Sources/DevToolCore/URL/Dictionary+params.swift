@@ -6,6 +6,7 @@
 
 import Foundation
 
+public
 extension Dictionary {
     var queryParameters: String {
         self.map { key, value -> String in

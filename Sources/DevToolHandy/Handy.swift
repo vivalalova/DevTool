@@ -4,6 +4,7 @@
 //  Created by Lova on 2024/3/29.
 //
 
+import DevToolCore
 import HandyJSON
 
 public
@@ -13,9 +14,7 @@ protocol Handy: HandyJSON, Hashable, Identifiable {
 
 public
 extension Handy {
-    var id: String {
-        hashValue.string
-    }
+    var id: String { hashValue.string }
 }
 
 public

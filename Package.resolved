@@ -1,5 +1,4 @@
 {
-  "originHash" : "17ad3a96320db8d6ed2e450b5a907e30a715ef92a981dcf86cffe15fd071334d",
   "pins" : [
     {
       "identity" : "handyjson",
@@ -11,5 +10,5 @@
       }
     }
   ],
-  "version" : 3
+  "version" : 2
 }

@@ -13,6 +13,7 @@ extension URL: Identifiable {
     }
 }
 
+public
 extension URL {
     /// for GET method
     func addParameter(_ dict: [String: Any]) -> URL {
