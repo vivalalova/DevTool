@@ -23,8 +23,8 @@ protocol Fetch: AnyObject {
 
     static var shared: Self { get }
 
-    func willSend(params: inout [String: Any], method: HttpMethod, path: String) -> Params
-    func willSend(request: inout URLRequest, method: HttpMethod, path: String, params: [String: Any]) -> URLRequest
+    func willSend(params: inout Params, method: HttpMethod, path: String) -> Params
+    func willSend(request: inout URLRequest, method: HttpMethod, path: String, params: Params) -> URLRequest
 
     func show(progress: Float?)
     func hide(progress: Float?)

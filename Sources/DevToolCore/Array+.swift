@@ -120,3 +120,17 @@ extension Array where Element: Equatable {
         return result
     }
 }
+
+public
+extension Array {
+    /// 取前面幾個
+    func first(_ count: Int) -> Self {
+        let toIndex = Swift.min(self.count, count) - 1
+
+        guard toIndex > 0 else {
+            return []
+        }
+
+        return Array(self[0 ... toIndex])
+    }
+}

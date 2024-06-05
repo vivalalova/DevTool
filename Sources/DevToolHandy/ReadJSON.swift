@@ -19,13 +19,13 @@ struct JSON<T: HandyJSON> {
     }
 
     public static func read(_ name: String) -> T? {
-        let jsonString = self.string(name)
+        let jsonString = string(name)
 
         return JSONDeserializer.deserializeFrom(json: jsonString)
     }
 
     public static func read(_ name: String) -> [T] {
-        let jsonString = self.string(name)
+        let jsonString = string(name)
 
         return JSONDeserializer.deserializeModelArrayFrom(json: jsonString)?
             .compactMap { $0 } ?? []
