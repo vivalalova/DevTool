@@ -1,12 +1,12 @@
 {
   "pins" : [
     {
-      "identity" : "handyjson",
+      "identity" : "smartcodable",
       "kind" : "remoteSourceControl",
-      "location" : "https://github.com/alibaba/HandyJSON.git",
+      "location" : "https://github.com/intsig171/SmartCodable.git",
       "state" : {
-        "revision" : "dcf39cf062680ffa4fd0acb7f9117a97755c113f",
-        "version" : "5.0.2"
+        "revision" : "d869b7e3b4720baf1331de39e253bd92db22998b",
+        "version" : "3.4.6"
       }
     }
   ],

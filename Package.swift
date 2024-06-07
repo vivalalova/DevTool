@@ -16,7 +16,7 @@ let package = Package(
 
     ],
     dependencies: [
-        .package(url: "https://github.com/alibaba/HandyJSON.git", from: "5.0.2")
+        .package(url: "https://github.com/intsig171/SmartCodable.git", from: "3.4.5")
     ],
     targets: [
         //
@@ -31,13 +31,19 @@ let package = Package(
         ),
         .target(
             name: "DevToolFetch",
-            dependencies: ["DevToolCore", "HandyJSON"]
+            dependencies: [
+                "DevToolCore",
+                "SmartCodable"
+            ]
         ),
         .target(name: "DevToolSwiftUIView"),
         .target(name: "DevToolImagePicker"),
         .target(
             name: "DevToolHandy",
-            dependencies: ["DevToolCore", "HandyJSON"]
+            dependencies: [
+                "DevToolCore",
+                "SmartCodable"
+            ]
         )
     ]
 )

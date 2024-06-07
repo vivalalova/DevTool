@@ -5,11 +5,11 @@
 //
 
 import Foundation
-import HandyJSON
+import SmartCodable
 
 public
 /// For Preview Content
-struct JSON<T: HandyJSON> {
+struct JSON<T: SmartCodable> {
     private static func string(_ name: String) -> String? {
         guard let bundlePath = Bundle.main.path(forResource: name, ofType: "json") else {
             return nil
@@ -19,15 +19,14 @@ struct JSON<T: HandyJSON> {
     }
 
     public static func read(_ name: String) -> T? {
-        let jsonString = string(name)
+        let jsonString = self.string(name)
 
-        return JSONDeserializer.deserializeFrom(json: jsonString)
+        return T.deserialize(from: jsonString)
     }
 
     public static func read(_ name: String) -> [T] {
-        let jsonString = string(name)
+        let jsonString = self.string(name)
 
-        return JSONDeserializer.deserializeModelArrayFrom(json: jsonString)?
-            .compactMap { $0 } ?? []
+        return [T].deserialize(from: jsonString)?.compactMap { $0 } ?? []
     }
 }

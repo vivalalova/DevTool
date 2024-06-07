@@ -6,9 +6,8 @@
 
 import Combine
 import Foundation
-import HandyJSON
 import OSLog
-
+import SmartCodable
 
 // async
 public
@@ -52,23 +51,24 @@ extension Fetch {
         }
     }
 
-    func fetchAsync<T: HandyJSON>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false, designatedPath: String? = nil) async throws -> [T] {
+    func fetchAsync<T: SmartCodable>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false, designatedPath: String? = nil) async throws -> [T] {
         do {
             let data: Data = try await self.fetchAsync(method: method, path: path, params: params, showHUD: showHUD, showErrorMessage: showErrorMessage)
             let string = String(data: data, encoding: .utf8)
 
-            return JSONDeserializer.deserializeModelArrayFrom(json: string, designatedPath: designatedPath)?.compactMap { $0 } ?? []
+            return [T].deserialize(from: string, designatedPath: designatedPath)?.compactMap { $0 } ?? []
         } catch {
             logger.error("\(error)")
             throw error
         }
     }
 
-    func fetchAsync<T: HandyJSON>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false, designatedPath: String? = nil) async throws -> T? {
+    func fetchAsync<T: SmartCodable>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false, designatedPath: String? = nil) async throws -> T? {
         do {
             let data: Data = try await self.fetchAsync(method: method, path: path, params: params, showHUD: showHUD, showErrorMessage: showErrorMessage)
             let string = String(data: data, encoding: .utf8)
-            return JSONDeserializer.deserializeFrom(json: string, designatedPath: designatedPath)
+            
+            return T.deserialize(from: string, designatedPath: designatedPath)
         } catch {
             logger.error("\(error)")
             throw error

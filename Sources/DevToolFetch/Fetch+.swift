@@ -8,8 +8,8 @@
 import Combine
 import DevToolCore
 import Foundation
-import HandyJSON
 import OSLog
+import SmartCodable
 
 let logger = Logger()
 
@@ -83,10 +83,10 @@ extension Fetch {
 
 public
 extension Publisher<Data, any Error> {
-    func fromObject<T: HandyJSON>(mapPath: String) -> AnyPublisher<T?, any Error> {
+    func fromObject<T: SmartCodable>(mapPath: String) -> AnyPublisher<T?, any Error> {
         self.map { try? JSONSerialization.jsonObject(with: $0) as? [String: Any] }
             .map { $0?[mapPath] as? [String: Any] }
-            .map { JSONDeserializer.deserializeFrom(dict: $0) }
+            .map { T.deserialize(from: $0) }
             .mapError {
                 logger.error("\($0)")
                 return $0
@@ -94,10 +94,9 @@ extension Publisher<Data, any Error> {
             .eraseToAnyPublisher()
     }
 
-    func fromObject<T: HandyJSON>(mapPath: String) -> AnyPublisher<[T], any Error> {
+    func fromObject<T: SmartCodable>(mapPath: String) -> AnyPublisher<[T], any Error> {
         self.map { String(data: $0, encoding: .utf8) }
-            .map { JSONDeserializer<T>.deserializeModelArrayFrom(json: $0, designatedPath: mapPath)?.compactMap { $0 } }
-            .replaceNil(with: [])
+            .compactMap { [T].deserialize(from: $0, designatedPath: mapPath)?.compactMap { $0 } }        
             .mapError {
                 logger.error("\($0)")
                 return $0

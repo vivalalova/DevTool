@@ -5,10 +5,10 @@
 //
 
 import DevToolCore
-import HandyJSON
+import SmartCodable
 
 public
-protocol Handy: HandyJSON, Hashable, Identifiable {
+protocol Handy: SmartCodable, Hashable, Identifiable {
     var id: String { get }
 }
 
@@ -17,20 +17,19 @@ extension Handy {
     var id: String { hashValue.string }
 }
 
-public
-extension HandyJSON {
+extension SmartDecodable where Self: SmartEncodable {
     func merging(another: Self) -> Self {
-        guard let dict1 = toJSON() else {
+        guard let dict1 = self.toDictionary() else {
             return another
         }
 
-        guard let dict2 = another.toJSON() else {
+        guard let dict2 = another.toDictionary() else {
             return self
         }
 
         let newDict = dict1.merging(another: dict2)
 
-        guard let new: Self = JSONDeserializer.deserializeFrom(dict: newDict) else {
+        guard let new = Self.deserialize(from: newDict) else {
             return self
         }
 

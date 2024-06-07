@@ -5,7 +5,7 @@
 //
 
 import Combine
-import HandyJSON
+import SmartCodable
 import SwiftUI
 
 public
@@ -53,11 +53,12 @@ extension Fetch {
             .eraseToAnyPublisher()
     }
 
-    func fetch<T: HandyJSON>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false) -> Response<[T]> {
+    func fetch<T: SmartCodable>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false) -> Response<[T]> {
         self.fetch(method: method, path: path, params: params, showHUD: showHUD, showErrorMessage: showErrorMessage)
             .map { data in
                 let string = String(data: data, encoding: .utf8)
-                return JSONDeserializer.deserializeModelArrayFrom(json: string)?.compactMap { $0 } ?? []
+                
+                return [T].deserialize(from: string)?.compactMap { $0 } ?? []
             }
             .receive(on: DispatchQueue.main)
             .mapError {
@@ -67,11 +68,12 @@ extension Fetch {
             .eraseToAnyPublisher()
     }
 
-    func fetch<T: HandyJSON>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false) -> Response<T?> {
+    func fetch<T: SmartCodable>(method: HttpMethod = .get, path: String, params: [String: Any] = [:], showHUD: Bool = false, showErrorMessage: Bool = false) -> Response<T?> {
         self.fetch(method: method, path: path, params: params, showHUD: showHUD, showErrorMessage: showErrorMessage)
             .map { data in
                 let string = String(data: data, encoding: .utf8)
-                return JSONDeserializer.deserializeFrom(json: string)
+                
+                return T.deserialize(from: string)            
             }
             .receive(on: DispatchQueue.main)
             .mapError {

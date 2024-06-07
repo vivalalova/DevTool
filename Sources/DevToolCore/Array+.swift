@@ -107,21 +107,6 @@ extension Array {
 }
 
 public
-extension Array where Element: Equatable {
-    func removeDuplicates() -> Self {
-        var result = Self()
-
-        for value in self {
-            if result.contains(value) == false {
-                result.append(value)
-            }
-        }
-
-        return result
-    }
-}
-
-public
 extension Array {
     /// 取前面幾個
     func first(_ count: Int) -> Self {

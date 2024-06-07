@@ -5,11 +5,11 @@
 //
 
 import Foundation
-import HandyJSON
+import SmartCodable
 import UIKit
 
 public
-final class TimestampSince1970Transform: TransformType {
+final class TimestampSince1970Transform: ValueTransformable {
     public typealias Object = Date
     public typealias JSON = String
 
