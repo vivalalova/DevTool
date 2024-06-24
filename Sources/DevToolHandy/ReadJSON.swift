@@ -9,8 +9,8 @@ import SmartCodable
 
 public
 /// For Preview Content
-struct JSON<T: SmartCodable> {
-    private static func string(_ name: String) -> String? {
+enum file {
+    public static func string(_ name: String) -> String? {
         guard let bundlePath = Bundle.main.path(forResource: name, ofType: "json") else {
             return nil
         }
@@ -18,15 +18,26 @@ struct JSON<T: SmartCodable> {
         return try? String(contentsOfFile: bundlePath)
     }
 
+    public static func jsonObject(_ name: String) -> Any? {
+        guard let data = self.string(name)?.data(using: .utf8) else {
+            return nil
+        }
+
+        return try? JSONSerialization.jsonObject(with: data)
+    }
+}
+
+public
+struct JSON<T: SmartCodable> {
     public static func read(_ name: String) -> T? {
-        let jsonString = self.string(name)
+        let jsonString = file.string(name)
 
         return T.deserialize(from: jsonString)
     }
 
     public static func read(_ name: String) -> [T] {
-        let jsonString = self.string(name)
-
+        let jsonString = file.string(name)
+        print(jsonString)
         return [T].deserialize(from: jsonString)?.compactMap { $0 } ?? []
     }
 }
