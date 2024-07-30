@@ -37,7 +37,6 @@ struct JSON<T: SmartCodable> {
 
     public static func read(_ name: String) -> [T] {
         let jsonString = file.string(name)
-        print(jsonString)
         return [T].deserialize(from: jsonString)?.compactMap { $0 } ?? []
     }
 }

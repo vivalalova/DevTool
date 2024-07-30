@@ -32,3 +32,27 @@ protocol Fetch: AnyObject {
     /// called on all requests fail
     func on(_ error: URLError, of: URLRequest, isShow: Bool)
 }
+
+// optional
+public
+extension Fetch {
+    func show(progress: Float?) {
+        //
+    }
+
+    func hide(progress: Float?) {
+        //
+    }
+
+    func willSend(params: inout Params, method: HttpMethod, path: String) -> Params {
+        params
+    }
+
+    func willSend(request: inout URLRequest, method: HttpMethod, path: String, params: Params) -> URLRequest {
+        request
+    }
+
+    func on(_ error: URLError, of: URLRequest, isShow: Bool) {
+        //
+    }
+}
