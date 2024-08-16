@@ -6,7 +6,8 @@
 
 import Combine
 
-public extension Publisher where Output: Collection {
+public
+extension Publisher where Output: Collection {
     func mapMany<Result>(_ transform: @escaping (Output.Element) -> Result) -> Publishers.Map<Self, [Result]> {
         map { $0.map(transform) }
     }

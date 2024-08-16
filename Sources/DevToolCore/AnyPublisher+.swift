@@ -7,7 +7,8 @@
 import Combine
 import UIKit
 
-public extension Publisher where Failure == Never {
+public
+extension Publisher where Failure == Never {
     func task(receiveValue: @escaping ((Self.Output) async -> Void)) -> AnyCancellable {
         sink { value in
             Task { @MainActor in
