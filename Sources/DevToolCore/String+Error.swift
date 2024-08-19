@@ -1,6 +1,5 @@
 //
-//  File 2.swift
-//  DevTool
+//  String+Error.swift
 //
 //  Created by Lova on 2024/8/16.
 //

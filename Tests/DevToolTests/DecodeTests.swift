@@ -22,7 +22,6 @@ final class DecodeTests: XCTestCase {
         }
 
         let bb = try? JSONDecoder().decode(OO.self, from: string)
-        print("ooo", oo)
 
         XCTAssertEqual(oo?.a, 1)
         XCTAssertEqual(oo?.b, "2")
