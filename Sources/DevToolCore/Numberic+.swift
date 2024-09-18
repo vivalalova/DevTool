@@ -12,3 +12,13 @@ extension Numeric {
         String(describing: self)
     }
 }
+
+public
+extension Numeric {
+    var powered: Self { self * self }
+}
+
+public
+extension BinaryFloatingPoint {
+    var int: Int { Int(self) }
+}

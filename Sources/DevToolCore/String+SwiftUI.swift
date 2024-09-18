@@ -10,12 +10,19 @@ import SwiftUI
 
 public
 extension String {
+    var double: Double? {
+        Double(self)
+    }
+}
+
+public
+extension String {
     var text: Text {
         Text(self)
     }
 }
 
-extension String: View {
+extension String: @retroactive View {
     public
     var body: some View {
         Text(self)

@@ -7,7 +7,7 @@
 import Combine
 import Foundation
 
-extension URL: Identifiable {
+extension URL: @retroactive Identifiable {
     public var id: String {
         self.absoluteString
     }

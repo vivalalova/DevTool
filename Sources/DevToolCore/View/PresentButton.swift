@@ -43,7 +43,7 @@ struct PresentButton<Content: View, Sheet: View>: View {
 }
 
 @available(iOS 16.4, *)
-extension PresentationAdaptation: Identifiable {
+extension PresentationAdaptation: @retroactive Identifiable {
     public var id: String {
         String(describing: self)
     }

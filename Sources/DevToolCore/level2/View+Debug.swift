@@ -26,7 +26,8 @@ extension View {
     func debug<Root, T: Equatable>(_ prefix: String = "debug", printChange keyPath: KeyPath<Root, T>, on: Root) -> some View {
         #if DEBUG
         onChange(of: on[keyPath: keyPath]) { newValue in
-            print(prefix, keyPath.debugDescription, newValue)
+            let keyName = keyPath.debugDescription.components(separatedBy: ".").last
+            print(prefix, keyName ?? "", keyPath.debugDescription, newValue)
         }
         #else
         self
