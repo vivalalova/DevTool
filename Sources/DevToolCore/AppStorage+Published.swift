@@ -5,43 +5,53 @@
 //  Created by Lova on 2024/9/18.
 //
 
+import Combine
+import SwiftUI
 
-
+//FIXME: not works in simulator
 @propertyWrapper
+public
 struct PublishedAppStorage<Value: Codable> {
-    @AppStorage private var storage: Data
+    @AppStorage private var storage: String
     private let subject = PassthroughSubject<Value, Never>()
     private let key: String
     private let defaultValue: Value
 
-    var wrappedValue: Value {
+    public var wrappedValue: Value {
         get {
-            guard let data = try? JSONDecoder().decode(Value.self, from: storage) else {
+            guard let data = storage.data(using: .utf8),
+                  let decodedValue = try? JSONDecoder().decode(Value.self, from: data) else {
                 return self.defaultValue
             }
-            return data
+            return decodedValue
         }
         set {
-            if let encodedData = try? JSONEncoder().encode(newValue) {
-                self.storage = encodedData
-                UserDefaults.standard.set(encodedData, forKey: key)
-                self.subject.send(newValue)
+            guard let encodedData = try? JSONEncoder().encode(newValue),
+                  let encodedString = String(data: encodedData, encoding: .utf8) else {
+                return
             }
+
+            self.storage = encodedString
+            UserDefaults.standard.set(encodedString, forKey: self.key)
+            self.subject.send(newValue)
         }
     }
 
-    var projectedValue: AnyPublisher<Value, Never> {
+    public var projectedValue: AnyPublisher<Value, Never> {
         self.subject.eraseToAnyPublisher()
     }
 
-    init(wrappedValue defaultValue: Value, _ key: String) {
+    public init(wrappedValue defaultValue: Value, _ key: String) {
         self.defaultValue = defaultValue
         self.key = key
-        self._storage = AppStorage(wrappedValue: Data(), key)
-        if let savedData = UserDefaults.standard.data(forKey: key) {
-            self.storage = savedData
+        self._storage = AppStorage(wrappedValue: "", key)
+        if let savedString = UserDefaults.standard.string(forKey: key) {
+            self.storage = savedString
+        } else if let encodedData = try? JSONEncoder().encode(defaultValue),
+                  let encodedString = String(data: encodedData, encoding: .utf8) {
+            self.storage = encodedString
         } else {
-            self.storage = (try? JSONEncoder().encode(defaultValue)) ?? Data()
+            self.storage = ""
         }
     }
 }
