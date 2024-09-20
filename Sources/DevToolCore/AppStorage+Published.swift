@@ -8,33 +8,31 @@
 import Combine
 import SwiftUI
 
-//FIXME: not works in simulator
+
+/// A property wrapper that combines `AppStorage` with `Codable` and `Combine` functionality.
+///
+/// `Storage` provides a convenient way to store and retrieve `Codable` values in `AppStorage`,
+/// while also offering reactive updates through Combine.
+///
+/// Usage:
+/// ```
+/// @Storage("userPreferences") var preferences: UserPreferences = UserPreferences()
+/// ```
+///
+/// - Note: This wrapper is marked with `@MainActor` to ensure all operations are performed on the main thread.
+///
+/// - Important: The wrapped value must conform to `Codable` protocol.
 @propertyWrapper
-public
-struct PublishedAppStorage<Value: Codable> {
-    @AppStorage private var storage: String
-    private let subject = PassthroughSubject<Value, Never>()
-    private let key: String
+@MainActor
+public struct Storage<Value: Codable>: DynamicProperty {
+    @AppStorage private var rawValue: String
+
+    private let subject: CurrentValueSubject<Value, Never>
     private let defaultValue: Value
 
     public var wrappedValue: Value {
-        get {
-            guard let data = storage.data(using: .utf8),
-                  let decodedValue = try? JSONDecoder().decode(Value.self, from: data) else {
-                return self.defaultValue
-            }
-            return decodedValue
-        }
-        set {
-            guard let encodedData = try? JSONEncoder().encode(newValue),
-                  let encodedString = String(data: encodedData, encoding: .utf8) else {
-                return
-            }
-
-            self.storage = encodedString
-            UserDefaults.standard.set(encodedString, forKey: self.key)
-            self.subject.send(newValue)
-        }
+        get { self.getCurrentValue() }
+        set { self.saveValue(newValue) }
     }
 
     public var projectedValue: AnyPublisher<Value, Never> {
@@ -43,15 +41,26 @@ struct PublishedAppStorage<Value: Codable> {
 
     public init(wrappedValue defaultValue: Value, _ key: String) {
         self.defaultValue = defaultValue
-        self.key = key
-        self._storage = AppStorage(wrappedValue: "", key)
-        if let savedString = UserDefaults.standard.string(forKey: key) {
-            self.storage = savedString
-        } else if let encodedData = try? JSONEncoder().encode(defaultValue),
-                  let encodedString = String(data: encodedData, encoding: .utf8) {
-            self.storage = encodedString
-        } else {
-            self.storage = ""
+        self._rawValue = AppStorage(wrappedValue: "", key)
+        self.subject = CurrentValueSubject<Value, Never>(defaultValue)
+
+        self.subject.send(self.wrappedValue)
+    }
+
+    private func getCurrentValue() -> Value {
+        guard let data = rawValue.data(using: .utf8) else {
+            return self.defaultValue
         }
+
+        return (try? JSONDecoder().decode(Value.self, from: data)) ?? self.defaultValue
+    }
+
+    private func saveValue(_ newValue: Value) {
+        guard let data = try? JSONEncoder().encode(newValue) else {
+            return
+        }
+
+        self.rawValue = String(data: data, encoding: .utf8) ?? ""
+        self.subject.send(newValue)
     }
 }

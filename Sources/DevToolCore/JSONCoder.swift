@@ -9,7 +9,7 @@ import Foundation
 
 public
 extension JSONDecoder {
-    func decode<T>(_ type: T.Type, from string: String) throws -> T? where T: Decodable {
+    func decode<T: Decodable>(_ type: T.Type, from string: String) throws -> T? {
         guard let data = string.data(using: .utf8) else {
             return nil
         }
